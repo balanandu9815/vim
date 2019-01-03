@@ -1,5 +1,4 @@
-<html>
-<body>
+
 	<h2>Welcome to Vehicle Inventory Management(VIM)</h2>
 	<br>
 	<pre>Design a simple Restful application (do not use springboot)to handle vehicles inventory & search. Share your coding assessment via public git repo.
@@ -10,7 +9,14 @@ Basic requirements:
 2)     CRUD operations to manage vehicles
 3)     Save to a local db like h2 or sqlite
 4)     Ability to search for vehicles
-5)     Delete recent API - should delete last added vehicle</pre>
+5)     Delete recent API - should delete last added vehicle
+<br/>
+Technologies Used:
+Maven 3.6
+java 1.8
+Tomcat 8.0
+RestEasy 3.1.4
+
 	<br>
 	<h4>Rest API Documentation</h4>
 	<p>Please follow below points to access above restful VIM
@@ -304,6 +310,5 @@ Basic requirements:
 		<Response>
 		<respCode>200</respCode>
 		<respMessage>All Vehicles Data Deleted Successfully</respMessage></Response>
-	</pre>
-</body>
-</html>
+	
+
