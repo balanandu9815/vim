@@ -1,7 +1,6 @@
 
-	<html><body><h2>Welcome to Vehicle Inventory Management(VIM)</h2>
-	<br>
-	<pre>Design a simple Restful application (do not use springboot)to handle vehicles inventory & search. Share your coding assessment via public git repo.
+	Welcome to Vehicle Inventory Management(VIM)
+	Design a simple Restful application (do not use springboot)to handle vehicles inventory & search. Share your coding assessment via public git repo.
 
 Basic requirements: 
 
@@ -16,13 +15,11 @@ Maven 3.6
 java 1.8
 Tomcat 8.0
 RestEasy 3.1.4
-</body>
-</html>
+H2 Database 1.4.197
 
-	<br>
-	<h4>Rest API Documentation</h4>
-	<p>Please follow below points to access above restful VIM
-		application api's.</p>
+	Rest API Documentation
+	Please follow below points to access above restful VIM
+		application api's.
 	<h5>To View all Vehicles</h5>
 	<pre>
 	URL:http://localhost:8080/vim/rest/vehicles
