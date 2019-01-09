@@ -11,9 +11,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import com.balu.vim.model.Vehicle;
 import com.balu.vim.utils.DataSourceUtil;
+
 //DAO LOGIC
 public class VehicleDaoImpl implements VehicleDao {
 
+	// retrieves all exist vehicles from DB
 	@Override
 	public List<Vehicle> findAllVehicles() {
 		List<Vehicle> Vehicles = new ArrayList<>();
@@ -27,6 +29,7 @@ public class VehicleDaoImpl implements VehicleDao {
 		return Vehicles;
 	}
 
+	// retrieves exist vehicle by Id from DB
 	@Override
 	public Vehicle findVehicle(int id) {
 		Vehicle vehicle = new Vehicle();
@@ -42,6 +45,7 @@ public class VehicleDaoImpl implements VehicleDao {
 		return vehicle;
 	}
 
+	// retrieves last added vehicle from DB
 	@Override
 	public Vehicle getLastAddedVehicle() {
 		Vehicle vehicle = new Vehicle();
@@ -56,16 +60,17 @@ public class VehicleDaoImpl implements VehicleDao {
 		return vehicle;
 	}
 
+	// saves Vehicle Data in DB
 	@Override
 	public boolean saveVehicle(Vehicle vehicle) {
 		boolean isSaved = false;
 		try {
 			JdbcTemplate jtm = DataSourceUtil.getSession();
-			//int rowCount = jtm.update(SAVE_VEHICLE_DATA, vehicle);
-			int rowCount = jtm.update(SAVE_VEHICLE_DATA, new Object[] {
-					vehicle.getVehicleName(), vehicle.getVehicleType(),vehicle.getVehicleYear(),vehicle.getVehicleMake(),
-					vehicle.getVehicleModel(),vehicle.getVehiclePrice(),vehicle.getVehicleSpeed(),vehicle.getVehicleRegisterDate(),
-					vehicle.getDescription(),vehicle.getFeatures(),vehicle.getRegisteredBy()});
+			int rowCount = jtm.update(SAVE_VEHICLE_DATA,
+					new Object[] { vehicle.getVehicleName(), vehicle.getVehicleType(), vehicle.getVehicleYear(),
+							vehicle.getVehicleMake(), vehicle.getVehicleModel(), vehicle.getVehiclePrice(),
+							vehicle.getVehicleSpeed(), vehicle.getVehicleRegisterDate(), vehicle.getDescription(),
+							vehicle.getFeatures(), vehicle.getRegisteredBy() });
 			if (rowCount >= 1) {
 				isSaved = true;
 			}
@@ -76,15 +81,17 @@ public class VehicleDaoImpl implements VehicleDao {
 		return isSaved;
 	}
 
+	// Updates exist vehicle by Id
 	@Override
-	public boolean updateVehicle(Vehicle vehicle,int id) {
+	public boolean updateVehicle(Vehicle vehicle, int id) {
 		boolean isUpdated = false;
 		try {
 			JdbcTemplate jtm = DataSourceUtil.getSession();
-			int rowCount = jtm.update(UPDATE_VEHICLE_DATA, new Object[] {
-					vehicle.getVehicleName(), vehicle.getVehicleType(),vehicle.getVehicleYear(),vehicle.getVehicleMake(),
-					vehicle.getVehicleModel(),vehicle.getVehiclePrice(),vehicle.getVehicleSpeed(),vehicle.getVehicleRegisterDate(),
-					vehicle.getDescription(),vehicle.getFeatures(),vehicle.getRegisteredBy(), id });
+			int rowCount = jtm.update(UPDATE_VEHICLE_DATA,
+					new Object[] { vehicle.getVehicleName(), vehicle.getVehicleType(), vehicle.getVehicleYear(),
+							vehicle.getVehicleMake(), vehicle.getVehicleModel(), vehicle.getVehiclePrice(),
+							vehicle.getVehicleSpeed(), vehicle.getVehicleRegisterDate(), vehicle.getDescription(),
+							vehicle.getFeatures(), vehicle.getRegisteredBy(), id });
 			if (rowCount >= 1) {
 				isUpdated = true;
 			}
@@ -96,6 +103,7 @@ public class VehicleDaoImpl implements VehicleDao {
 		return isUpdated;
 	}
 
+	// Deletes Vehicle by ID
 	@Override
 	public boolean deleteVehicle(int id) {
 		boolean deleted = false;
@@ -116,6 +124,7 @@ public class VehicleDaoImpl implements VehicleDao {
 		return deleted;
 	}
 
+	// Deletes all exist Vehicles from DB
 	@Override
 	public boolean deleteAllVehicles() {
 		boolean deleted = false;
@@ -132,13 +141,14 @@ public class VehicleDaoImpl implements VehicleDao {
 		return deleted;
 	}
 
+	// Delete last added vehicle
 	@Override
 	public boolean deleteLatestVehicle() {
 		boolean deleted = false;
 		try {
 			Vehicle vehicle = getLastAddedVehicle();
 			if (vehicle != null && vehicle.getVehicleId() > 0) {
-				deleted=deleteVehicle(vehicle.getVehicleId());
+				deleted = deleteVehicle(vehicle.getVehicleId());
 			}
 		} catch (DataAccessException dae) {
 			Logger lgr = Logger.getLogger(VehicleDaoImpl.class.getName());

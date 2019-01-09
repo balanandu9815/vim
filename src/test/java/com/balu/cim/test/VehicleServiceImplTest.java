@@ -2,8 +2,6 @@ package com.balu.cim.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.anyInt;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +14,6 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import com.balu.vim.dao.VehicleDaoImpl;
-import com.balu.vim.exception.VehicleServiceException;
 import com.balu.vim.model.Vehicle;
 import com.balu.vim.services.VehicleInventoryServiceImpl;
 
@@ -112,13 +109,8 @@ public class VehicleServiceImplTest {
 		vehicle.setVehicleType("Car");
 		vehicle.setVehicleMake("Honda");
 
-		// Mock
-		//Mockito.when(vehicleDaoImpl.findVehicle(anyInt())).thenReturn(vehicle);
-
 		// Run
 		boolean status = vehicleInventoryServiceImpl.createVehicle(vehicle);
-		// Assert
-		//assertTrue(status);
 	}
 
 	@Test
@@ -129,41 +121,9 @@ public class VehicleServiceImplTest {
 		vehicle.setVehicleType("Car");
 		vehicle.setVehicleMake("Honda");
 
-		// Mock
-		//Mockito.when(vehicleDaoImpl.findVehicle(anyInt())).thenReturn(vehicle);
-
 		// Run
 		boolean status = vehicleInventoryServiceImpl.updateVehicle(vehicle, 1);
-		// Assert
-		//assertTrue(status);
+		
 	}
-
-	/*@Test(expected = VehicleServiceException.class)
-	public void updateVehicle_shouldReturnsVehicleException() {
-
-		// Setup
-		Vehicle vehicle = new Vehicle();
-		vehicle.setVehicleType("Car");
-		vehicle.setVehicleMake("Honda");
-
-		// Mock
-		Mockito.when(vehicleDaoImpl.findVehicle(anyInt())).thenReturn(null);
-
-		// Run
-		boolean status = vehicleInventoryServiceImpl.updateVehicle(vehicle, 1);
-		// Assert
-		assertTrue(status);
-
-	}
-
-	@Test(expected = VehicleServiceException.class)
-	public void deleteVehicle_shouldReturnsVehicleException() {
-
-		// Mock
-		Mockito.when(vehicleDaoImpl.findVehicle(anyInt())).thenReturn(null);
-
-		// Run
-		vehicleInventoryServiceImpl.deleteLatestVehicle();
-	}*/
 
 }

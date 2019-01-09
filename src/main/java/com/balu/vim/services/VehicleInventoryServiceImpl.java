@@ -13,7 +13,7 @@ import com.balu.vim.dao.VehicleDao;
 import com.balu.vim.model.Vehicle;
 import com.balu.vim.resources.VehicleDescs;
 
-//service Layer Logic
+//service Layer Logic to perform CRUD operation on Vehicle Resource
 public class VehicleInventoryServiceImpl implements VehicleInventoryService {
 
 	@Inject

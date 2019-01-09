@@ -20,14 +20,13 @@ public class VimAppInitializer implements ServletContextListener {
     public void contextInitialized(ServletContextEvent sce) {
 
         Logger lgr = Logger.getLogger(VimAppInitializer.class.getName());
-        lgr.log(Level.INFO, "Executing contextInitialized()");
+        lgr.log(Level.INFO, "Executing contextInitialized(ServletContextEvent sce)...");
 
         String url = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;" 
-                + "INIT=RUNSCRIPT FROM 'classpath:/sql/VehicleTable.sql'"
-                + "\\;RUNSCRIPT FROM 'classpath:/sql/VehicleData.sql'";
+                + "INIT=RUNSCRIPT FROM 'classpath:/sql/VehicleTable.sql'";
         DataSourceUtil.getDataSource().setUrl(url);
         try (Connection con =  DataSourceUtil.getDataSource().getConnection()) {
-        	lgr.log(Level.INFO, "Running Initial SQL Scripts...");
+        	lgr.log(Level.INFO, "Running Initial Create Table SQL Scripts..");
         } catch (SQLException ex) {
             lgr.log(Level.SEVERE, ex.getMessage(), ex);
         }

@@ -1,5 +1,6 @@
 package com.balu.vim.resources;
 
+//This class describes the features of vehicles of various types
 public class VehicleDescs {
 	public static final String defaultRegister = "System";
 	public static final String carFeatures = "Comfortably travel. Air conditioned";
