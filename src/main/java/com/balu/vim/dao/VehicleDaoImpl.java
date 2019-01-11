@@ -21,7 +21,8 @@ public class VehicleDaoImpl implements VehicleDao {
 		List<Vehicle> Vehicles = new ArrayList<>();
 		try {
 			JdbcTemplate jtm = DataSourceUtil.getSession();
-			Vehicles = jtm.query(FETCH_ALL_VEHICLES, new BeanPropertyRowMapper<Vehicle>(Vehicle.class));
+			Vehicles = jtm.query(FETCH_ALL_VEHICLES, new BeanPropertyRowMapper<Vehicle>(Vehicle.class) {
+			});
 		} catch (DataAccessException dae) {
 			Logger lgr = Logger.getLogger(VehicleDaoImpl.class.getName());
 			lgr.log(Level.SEVERE, dae.getMessage(), dae);

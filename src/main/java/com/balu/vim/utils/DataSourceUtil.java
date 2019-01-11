@@ -1,5 +1,8 @@
 package com.balu.vim.utils;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 //Util Class for DataSource Instance
@@ -26,6 +29,10 @@ public class DataSourceUtil {
     
     public static SimpleDriverDataSource getDataSource(){
         return getInstance().simpleDriverDataSource;
+    }
+    
+    public static String dateToString(Date date) {
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
     }
 }
  

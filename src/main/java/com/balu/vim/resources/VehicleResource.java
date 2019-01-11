@@ -28,6 +28,77 @@ public class VehicleResource {
 	// It injects VehicleInventoryService to this class code
 	@Inject
 	private VehicleInventoryService vehicleInventoryService;
+	
+	/*
+	 * Creates a new Vehicle. This request should carry a request body that includes
+	 * the data that should be associated with the newly created Vehicle. If the
+	 * Vehicle is created, an HTTP 201 (Created) status is returned.
+	 * 
+	 * URL:http://localhost:8080/vim/rest/vehicles
+	 * 
+	 * Request Method: POST 
+	 * Request Body:
+	 * {
+	 *	 	"vehicleName":"BenZ ",
+	 * 		"vehicleType":"Car",
+	 * 		"vehicleYear":2018,
+	 * 		"vehicleMake":"Mercedaz",
+	 * 		"vehicleModel":"luxury",
+	 * 		"vehiclePrice":2000000.00,
+	 * 		"vehicleSpeed":180,
+	 * 		"description":"business class for rich",
+	 * 		"features":"AC with accident proof",
+	 * 		"registeredBy":"balanandu"
+	 * } 
+	 * Headers:
+	 * Content-type:
+	 * application/json:charset=UTF-8 Accept: application/json 
+	 * Http Status: 201
+	 * Created JSON Response:
+	 * 	{
+	 * 		"respCode":200,
+	 * 		"respMessage":"New Vehicle Data created Successfully"
+	 * }
+	 * Headers:
+	 *  Content-type: application/xml;charset=UTF-8 
+	 *  Accept: application/xml
+	 * Request Body: 
+	 * <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	 * <vehicle> 
+	 * 		<description>business class for rich</description> 
+	 * 		<features>AC with accident proof</features>
+	 * 		<registeredBy>balanandu</registeredBy>
+	 * 		<vehicleMake>Mercedaz</vehicleMake> 
+	 * 		<vehicleModel>luxury</vehicleModel>
+	 * 		<vehicleName>BenZ </vehicleName> 
+	 * 		<vehiclePrice>2000000.00</vehiclePrice>
+	 * 		<vehicleSpeed>180</vehicleSpeed> 
+	 * 		<vehicleType>Car</vehicleType>
+	 * 		<vehicleYear>2018</vehicleYear> 
+	 * </vehicle> 
+	 * Http Status: 201 Created XML
+	 * Response: 
+	 * <?xml version="1.0" encoding="UTF-8" standalone="yes"?> 
+	 * <Response>
+	 * 		<respCode>200</respCode> 
+	 * 		<respMessage>New Vehicle Data created Successfully</respMessage> 
+	 * </Response>
+	 */
+
+	@POST
+	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	public Response saveVehicle(Vehicle vehicle) {
+		boolean status = vehicleInventoryService.createVehicle(vehicle);
+		if (status) {
+			return Response.ok().status(Response.Status.CREATED).entity(
+					new ApiResponse(Response.Status.OK.getStatusCode(), "New Vehicle Data created Successfully"))
+					.build();
+		} else {
+			return Response.notModified().entity(new ApiResponse(Response.Status.NOT_MODIFIED.getStatusCode(),
+					"New Vehicle Data Not Saved Successfully")).build();
+		}
+	}
 
 	/*
 	 * Obtains the list of all Vehicles currently created in the system. If the list
@@ -39,52 +110,90 @@ public class VehicleResource {
 	 * Request Method: GET 
 	 * Request Body: none 
 	 * Headers: 
-	 * Content-type: application/json or application/XML :charset=UTF-8 
-	 * Accept: application/json or application/XML 
+	 * 		Content-type: application/json or application/XML :charset=UTF-8
+	 * 		Accept: application/json or application/XML
 	 * Http Status: 200 OK 
 	 * Response:
-	 * {"Vehicle":[{"vehicleId":1,"vehicleName":"Ashok Leyland","vehicleType":
-	 * "Truck","vehicleYear":2018,"vehicleMake":"TATA","vehicleModel":"Eicher",
-	 * "vehiclePrice":600000.00,"vehicleSpeed":180,"vehicleRegisterDate":
-	 * 1545244200000,"description":"Heavy load Carrier","features":"20 wheels"
-	 * ,"registeredBy":"balanandu"},{"vehicleId":2,"vehicleName":"Nano",
-	 * "vehicleType":"Car","vehicleYear":2019,"vehicleMake":"TATA","vehicleModel":
-	 * "deluxe","vehiclePrice":500000.00,"vehicleSpeed":180,"vehicleRegisterDate":
-	 * 1545244200000,"description":"nano from tata","features":"non-AC",
-	 * "registeredBy":"balanandu"},{"vehicleId":3,"vehicleName":"Benz","vehicleType"
-	 * :"Car","vehicleYear":2018,"vehicleMake":"Mercedaz","vehicleModel":"luxury",
-	 * "vehiclePrice":2000000.00,"vehicleSpeed":180,"vehicleRegisterDate":
-	 * 1576780200000,"description":"business class for rich"
-	 * ,"features":"AC with accident proof","registeredBy":"balanandu"},{"vehicleId"
-	 * :4,"vehicleName":"Ashok Leyland","vehicleType":"Truck","vehicleYear":2018,
-	 * "vehicleMake":"TATA","vehicleModel":"Eicher","vehiclePrice":600000.00,
-	 * "vehicleSpeed":180,"vehicleRegisterDate":1545244200000,
-	 * "description":"Heavy load Carrier","features":"20 wheels","registeredBy":
-	 * "balanandu"},{"vehicleId":5,"vehicleName":"Nano","vehicleType":"Car",
-	 * "vehicleYear":2019,"vehicleMake":"TATA","vehicleModel":"deluxe",
-	 * "vehiclePrice":500000.00,"vehicleSpeed":180,"vehicleRegisterDate":
-	 * 1545244200000,"description":"nano from tata","features":"non-AC",
-	 * "registeredBy":"balanandu"},{"vehicleId":6,"vehicleName":"Benz","vehicleType"
-	 * :"Car","vehicleYear":2018,"vehicleMake":"Mercedaz","vehicleModel":"luxury",
-	 * "vehiclePrice":2000000.00,"vehicleSpeed":180,"vehicleRegisterDate":
-	 * 1576780200000,"description":"business class for rich"
-	 * ,"features":"AC with accident proof","registeredBy":"balanandu"}]}
-	 * 
+	 * {
+		    "vehicleList": [
+		        {
+		            "vehicleId": 1,
+		            "vehicleName": "BenZ ",
+		            "vehicleType": "Car",
+		            "vehicleYear": 2018,
+		            "vehicleMake": "Mercedaz",
+		            "vehicleModel": "luxury",
+		            "vehiclePrice": 2000000,
+		            "vehicleSpeed": 180,
+		            "vehicleRegisterDate": "2019-01-10 23:36:38",
+		            "description": "business class for rich",
+		            "features": "AC with accident proof",
+		            "registeredBy": "balanandu"
+		        },
+		        {
+		            "vehicleId": 2,
+		            "vehicleName": "Ashok Leyland",
+		            "vehicleType": "Truck",
+		            "vehicleYear": 2018,
+		            "vehicleMake": "TATA",
+		            "vehicleModel": "Eicher",
+		            "vehiclePrice": 600000,
+		            "vehicleSpeed": 180,
+		            "vehicleRegisterDate": "2019-01-10 23:41:04",
+		            "description": "Heavy load Carrier",
+		            "features": "20 wheels",
+		            "registeredBy": "balanandu"
+		        }
+		    ]
+		}
+	Headers:
+	Content-type: application/xml;charset=UTF-8
+	Accept: application/xml
+	Http Status: 200 OK
+	XML Response:
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<VehicleList>
+	    <Vehicle>
+	        <description>Heavy load Carrier</description>
+	        <features>20 wheels</features>
+	        <registeredBy>balanandu</registeredBy>
+	        <vehicleId>1</vehicleId>
+	        <vehicleMake>TATA</vehicleMake>
+	        <vehicleModel>Eicher</vehicleModel>
+	        <vehicleName>Ashok Leyland</vehicleName>
+	        <vehiclePrice>600000.00</vehiclePrice>
+	        <vehicleRegisterDate>2019-01-10 23:28:34</vehicleRegisterDate>
+	        <vehicleSpeed>180</vehicleSpeed>
+	        <vehicleType>Truck</vehicleType>
+	        <vehicleYear>2018</vehicleYear>
+	    </Vehicle>
+	    <Vehicle>
+	        <description>business class for rich</description>
+	        <features>AC with accident proof</features>
+	        <registeredBy>balanandu</registeredBy>
+	        <vehicleId>2</vehicleId>
+	        <vehicleMake>Mercedaz</vehicleMake>
+	        <vehicleModel>luxury</vehicleModel>
+	        <vehicleName>BenZ </vehicleName>
+	        <vehiclePrice>2000000.00</vehiclePrice>
+	        <vehicleRegisterDate>2019-01-10 23:31:21</vehicleRegisterDate>
+	        <vehicleSpeed>180</vehicleSpeed>
+	        <vehicleType>Car</vehicleType>
+	        <vehicleYear>2018</vehicleYear>
+	    </Vehicle>
+	</VehicleList>
 	 */
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	public Response getVehicles() {
 		List<Vehicle> vehicles = vehicleInventoryService.getAllVehicles();
+		VehicleList vehicleList = new VehicleList();
 		if (!vehicles.isEmpty()) {
-			VehicleList vehicleList = new VehicleList();
 			for (Vehicle Vehicle : vehicles) {
 				vehicleList.getVehicleList().add(Vehicle);
 			}
-			return Response.ok(vehicleList).build();
-		} else {
-			return Response.status(Response.Status.NOT_FOUND)
-					.entity(new ApiResponse(Response.Status.NOT_FOUND.getStatusCode(), "No Data Found")).build();
 		}
+		return Response.ok(vehicleList).build();
 	}
 
 	/*
@@ -93,34 +202,51 @@ public class VehicleResource {
 	 * 200 status is returned and the response body contains the information
 	 * associated with the Vehicle.
 	 * 
-	 * URL:http://localhost:8080/vim/rest/vehicles/1 
-	 * PathParam: vehicleId(int type)
-	 * Request Method: GET 
-	 * Request Body: none 
-	 * Headers: 
-	 * Content-type:
-	 * application/json or application/XML :charset=UTF-8
-	 * Accept: application/json or application/XML 
-	 * Http Status: 200 OK 
-	 * JSON Response:
-	 * {"vehicleId":1,"vehicleName":"Ashok Leyland","vehicleType":"Truck",
-	 * "vehicleYear":2018,"vehicleMake":"TATA","vehicleModel":"Eicher",
-	 * "vehiclePrice":600000.00,"vehicleSpeed":180,"vehicleRegisterDate":
-	 * 1545244200000,"description":"Heavy load Carrier","features":"20 wheels"
-	 * ,"registeredBy":"balanandu"}
-	 * 
-	 * XML Response: 
-	 * <?xml version="1.0" encoding="UTF-8" standalone="yes"?> 
-	 * <vehicle>
-	 * <description>Heavy load Carrier</description> <features>20 wheels</features>
-	 * <registeredBy>balanandu</registeredBy> <vehicleId>1</vehicleId>
-	 * <vehicleMake>TATA</vehicleMake> <vehicleModel>Eicher</vehicleModel>
-	 * <vehicleName>Ashok Leyland</vehicleName>
-	 * <vehiclePrice>600000.00</vehiclePrice>
-	 * <vehicleRegisterDate>2018-12-20T00:00:00+05:30</vehicleRegisterDate>
-	 * <vehicleSpeed>180</vehicleSpeed> <vehicleType>Truck</vehicleType>
-	 * <vehicleYear>2018</vehicleYear>
-	 * </vehicle> 
+	 *  URL:http://localhost:8080/vim/rest/vehicles/{vehicleId}
+		Ex:http://localhost:8080/vim/rest/vehicles/1
+		PathParam: vehicleId(int type)
+		Request Method: GET
+		Request Body: none
+		Headers:
+		Content-type: application/json:charset=UTF-8
+		Accept: application/json
+		Http Status: 200 OK
+		JSON Response:
+		{
+		    "vehicleId": 1,
+		    "vehicleName": "BenZ ",
+		    "vehicleType": "Car",
+		    "vehicleYear": 2018,
+		    "vehicleMake": "Mercedaz",
+		    "vehicleModel": "luxury",
+		    "vehiclePrice": 2000000,
+		    "vehicleSpeed": 180,
+		    "vehicleRegisterDate": "2019-01-10 23:36:38",
+		    "description": "business class for rich",
+		    "features": "AC with accident proof",
+		    "registeredBy": "balanandu"
+		}
+		Headers:
+		Content-type: application/xml;charset=UTF-8
+		Accept: application/xml
+		Http Status: 200 OK
+		XML Response:
+		<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+		<vehicle>
+		    <description>business class for rich</description>
+		    <features>AC with accident proof</features>
+		    <registeredBy>balanandu</registeredBy>
+		    <vehicleId>1</vehicleId>
+		    <vehicleMake>Mercedaz</vehicleMake>
+		    <vehicleModel>luxury</vehicleModel>
+		    <vehicleName>BenZ </vehicleName>
+		    <vehiclePrice>2000000.00</vehiclePrice>
+		    <vehicleRegisterDate>2019-01-10 23:36:38</vehicleRegisterDate>
+		    <vehicleSpeed>180</vehicleSpeed>
+		    <vehicleType>Car</vehicleType>
+		    <vehicleYear>2018</vehicleYear>
+		</vehicle>
+		
 	 */
 	@Path("/{id}")
 	@GET
@@ -133,11 +259,11 @@ public class VehicleResource {
 					new InternalServerException(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), e.getMessage()))
 					.build();
 		}
-		Vehicle Vehicle = vehicleInventoryService.readVehicle(id);
-		if (Vehicle.getVehicleId() > 0) {
-			return Response.ok(Vehicle).build();
+		Vehicle vehicle = vehicleInventoryService.readVehicle(id);
+		if (vehicle.getVehicleId() > 0) {
+			return Response.ok(vehicle).build();
 		} else {
-			return Response.status(Response.Status.NOT_FOUND).entity(
+			return Response.status(Response.Status.OK).entity(
 					new ApiResponse(Response.Status.NOT_FOUND.getStatusCode(), "No Data Found for Vehicle Id: " + id))
 					.build();
 		}
@@ -154,55 +280,157 @@ public class VehicleResource {
 	 * Accept: application/json 
 	 * Http Status: 200 OK 
 	 * JSON Response:
-	 * {"vehicleId":24,"vehicleName":"Benz","vehicleType":"Car","vehicleYear":2018,
-	 * "vehicleMake":"Mercedaz","vehicleModel":"luxury","vehiclePrice":2000000.00,
-	 * "vehicleSpeed":180,"vehicleRegisterDate":1576780200000,
-	 * "description":"business class for rich","features":"AC with accident proof"
-	 * ,"registeredBy":"balanandu"} 
-	 * 
-	 * XML Response: 
-	 * <?xml version="1.0" encoding="UTF-8" standalone="yes"?> 
-	 * <vehicle>
-	 * <description>business class for rich</description> <features>AC with accident
-	 * proof</features> <registeredBy>balanandu</registeredBy>
-	 * <vehicleId>27</vehicleId> <vehicleMake>Mercedaz</vehicleMake>
-	 * <vehicleModel>luxury</vehicleModel> <vehicleName>Benz</vehicleName>
-	 * <vehiclePrice>2000000.00</vehiclePrice>
-	 * <vehicleRegisterDate>2019-12-20T00:00:00+05:30</vehicleRegisterDate>
-	 * <vehicleSpeed>180</vehicleSpeed> <vehicleType>Car</vehicleType>
-	 * <vehicleYear>2018</vehicleYear> 
-	 * </vehicle> 
+	 * {
+		    "vehicleId": 2,
+		    "vehicleName": "Ashok Leyland",
+		    "vehicleType": "Truck",
+		    "vehicleYear": 2018,
+		    "vehicleMake": "TATA",
+		    "vehicleModel": "Eicher",
+		    "vehiclePrice": 600000,
+		    "vehicleSpeed": 180,
+		    "vehicleRegisterDate": "2019-01-10 23:41:04",
+		    "description": "Heavy load Carrier",
+		    "features": "20 wheels",
+		    "registeredBy": "balanandu"
+		}
+		Headers:
+		Content-type: application/xml;charset=UTF-8
+		Accept: application/xml
+		Http Status: 200 OK
+		XML Response:
+		<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+		<vehicle>
+		    <description>Heavy load Carrier</description>
+		    <features>20 wheels</features>
+		    <registeredBy>balanandu</registeredBy>
+		    <vehicleId>2</vehicleId>
+		    <vehicleMake>TATA</vehicleMake>
+		    <vehicleModel>Eicher</vehicleModel>
+		    <vehicleName>Ashok Leyland</vehicleName>
+		    <vehiclePrice>600000.00</vehiclePrice>
+		    <vehicleRegisterDate>2019-01-10 23:41:04</vehicleRegisterDate>
+		    <vehicleSpeed>180</vehicleSpeed>
+		    <vehicleType>Truck</vehicleType>
+		    <vehicleYear>2018</vehicleYear>
+		</vehicle>
 	 */
 	@Path("/recent")
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	public Response getRecentVehicle() throws VehicleServiceException {
-		Vehicle Vehicle = vehicleInventoryService.getLastAddedVehicle();
-		if (Vehicle.getVehicleId() > 0) {
-			return Response.ok(Vehicle).build();
+		Vehicle vehicle = vehicleInventoryService.getLastAddedVehicle();
+		if (vehicle.getVehicleId() > 0) {
+			return Response.ok(vehicle).build();
 		} else {
-			return Response.status(Response.Status.NOT_FOUND)
-					.entity(new ApiResponse(Response.Status.NOT_FOUND.getStatusCode(), "No Recent vehicle Data Found"))
+			return Response.status(Response.Status.OK).entity(
+					new ApiResponse(Response.Status.NOT_FOUND.getStatusCode(), "Recent vehicle Data Not Found"))
 					.build();
 		}
 	}
+	
 	/*
-	 * URL:http://localhost:8080/vim/rest/vehicles/delete/2
-	 *  
-	 * PathParam: vehicleId(int type) 
-	 * Request Method: DELETE 
-	 * Headers: 
-	 * Content-type: application/json:charset=UTF-8 
-	 * Accept: application/json 
-	 * Http Status: 200 OK
+	 * It updates an Exist Vehicle Data
 	 * 
-	 * JSON Response:
-	 * {"respCode":200,"respMessage":"Vehicle Id 2 Data Deleted Successfully"}
-	 * XML Response: <?xml version="1.0" encoding="UTF-8" standalone="yes"?> 
-	 * <Response> 
-	 * <respCode>200</respCode> <respMessage>Vehicle
-	 * Id 2 Data Deleted Successfully</respMessage> 
-	 * </Response>
+	 * 	URL:http://localhost:8080/vim/rest/vehicles/{vehicleId}
+		Ex: http://localhost:8080/vim/rest/vehicles/1
+		PathParam: vehicleId(int type)
+		Request Method: PUT
+		Request Body: 
+		{
+			"vehicleName":"BenZ ",
+			"vehicleType":"Car",
+			"vehicleYear":2018,
+		 	"vehicleMake":"Mercedaz",
+		 	"vehicleModel":"luxury",
+		 	"vehiclePrice":2000000.00,
+		  	"vehicleSpeed":180,
+		 	"description":"business class for rich",
+		 	"features":"AC with accident proof",
+		  	"registeredBy":"balanandu"
+		 }
+		Headers:
+		Content-type: application/json:charset=UTF-8
+		Accept: application/json
+		Http Status: 201 Created
+		Response:
+		{
+		    "respCode": 200,
+		    "respMessage": "Exist Vehicle with  Id 1 's Data updated Successfully"
+		}
+		Headers:
+		Content-type: application/xml;charset=UTF-8
+		Accept: application/xml
+		Request Body: 
+		<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+		<vehicle>
+			<description>Heavy load Carrier</description>
+			<features>20 wheels</features>
+			<registeredBy>balanandu</registeredBy>
+			<vehicleMake>TATA</vehicleMake>
+			<vehicleModel>Eicher</vehicleModel>
+			<vehicleName>Ashok Leyland</vehicleName>
+			<vehiclePrice>600000.00</vehiclePrice>
+			<vehicleSpeed>180</vehicleSpeed>
+			<vehicleType>Truck</vehicleType>
+			<vehicleYear>2018</vehicleYear>
+		</vehicle>
+		Http Status: 201 Created
+		Response:
+		<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+			<Response>
+			<respCode>200</respCode>
+			<respMessage>Exist Vehicle with  Id 1 's Data updated Successfully</respMessage>
+			</Response>
+	 */
+	@Path("/{id}")
+	@PUT
+	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	public Response updateCity(Vehicle vehicle, @PathParam("id") int id) {
+		try {
+			validateVechicleId(id);
+		} catch (Exception e) {
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(
+					new InternalServerException(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), e.getMessage()))
+					.build();
+		}
+		boolean status = vehicleInventoryService.updateVehicle(vehicle, id);
+		if (status) {
+			return Response.ok().status(Response.Status.CREATED)
+					.entity(new ApiResponse(Response.Status.OK.getStatusCode(),
+							"Exist Vehicle with  Id " + id + " 's Data updated Successfully"))
+					.build();
+		} else {
+			return Response.notModified().entity(new ApiResponse(Response.Status.NOT_MODIFIED.getStatusCode(),
+					"Exist Vehicle  with Id " + id + "'s Data Not updated Successfully")).build();
+		}
+
+	}
+	
+	/*
+	 *	It Deletes Exist Data based on Vehicle Id
+	 *
+	 *	URL:http://localhost:8080/vim/rest/vehicles/delete/{vehicleId}
+		Ex: http://localhost:8080/vim/rest/vehicles/2
+		PathParam: vehicleId(int type)
+		Request Method: DELETE
+		Headers:
+		Content-type: application/json:charset=UTF-8
+		Accept: application/json
+		Http Status: 200 OK
+		Response:
+		{"respCode":200,"respMessage":"Vehicle Id 2 Data Deleted Successfully"}
+		Headers:
+		Content-type: application/xml;charset=UTF-8
+		Accept: application/xml
+		Http Status: 200 OK
+		Response:
+		<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+			<Response>
+				<respCode>200</respCode>
+				<respMessage>Vehicle Id 2 Data Deleted Successfully</respMessage>
+			</Response>
 	 * 
 	 */
 
@@ -232,19 +460,24 @@ public class VehicleResource {
 	/*
 	 * It Delete All Existing Vehicles Data
 	 * 
-	 * URL:http://localhost:8080/vim/rest/vehicles/delete 
-	 * Request Method: DELETE
-	 * Headers: Content-type: application/json:charset=UTF-8 
-	 * Accept: application/json 
-	 * Http Status: 200 OK 
-	 * JSON Response:
-	 * {"respCode":200,"respMessage":"All Vehicles Data Deleted Successfully"}
-	 * XML Response: 
-	 * <?xml version="1.0" encoding="UTF-8" standalone="yes"?> 
-	 * <Response>
-	 * <respCode>200</respCode> <respMessage>All
-	 * Vehicles Data Deleted Successfully</respMessage>
-	 * </Response>
+	 *	URL:http://localhost:8080/vim/rest/vehicles/delete
+		Request Method: DELETE
+		Headers:
+		Content-type: application/json:charset=UTF-8
+		Accept: application/json
+		Http Status: 200 OK
+		Response:
+		{"respCode":200,"respMessage":"All Vehicles Data Deleted Successfully"}
+		Headers:
+		Content-type: application/xml;charset=UTF-8
+		Accept: application/xml
+		Http Status: 200 OK
+		Response:
+		<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+		<Response>
+			<respCode>200</respCode>
+			<respMessage>All Vehicles Data Deleted Successfully</respMessage>
+		</Response>
 	 */
 	@Path("/delete")
 	@DELETE
@@ -265,21 +498,24 @@ public class VehicleResource {
 	/*
 	 * It Deletes an recent or last added Vehicle Data
 	 * 
-	 * URL:http://localhost:8080/vim/rest/vehicles/recent/delete 
-	 * 
-	 * Request Method: DELETE 
-	 * Headers: 
-	 * Content-type: application/json:charset=UTF-8 
-	 * Accept: application/json or XML
-	 * Http Status: 200 OK 
-	 * JSON Response:
-	 * {"respCode":200,"respMessage":"Recent Vehicle Data Deleted Successfully"}
-	 * XML Response: 
-	 * <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	 *  <Response> 
-	 *  <respCode>200</respCode> <respMessage>Recent
-	 *   Vehicle Data Deleted Successfully</respMessage>
-	 * </Response> 
+	 * URL:http://localhost:8080/vim/rest/vehicles/recent/delete
+		Request Method: DELETE
+		Headers:
+		Content-type: application/json:charset=UTF-8
+		Accept: application/json
+		Http Status: 200 OK
+		Response:
+		{"respCode":200,"respMessage":"Recent Vehicle Data Deleted Successfully"}
+		Headers:
+		Content-type: application/xml;charset=UTF-8
+		Accept: application/xml
+		Http Status: 200 OK
+		Response:
+		<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+		<Response>
+			<respCode>200</respCode>
+			<respMessage>Recent Vehicle Data Deleted Successfully</respMessage>
+		</Response>
 	 */
 	@Path("/recent/delete")
 	@DELETE
@@ -297,125 +533,6 @@ public class VehicleResource {
 		}
 	}
 
-	/*
-	 * Creates a new Vehicle. This request should carry a request body that includes
-	 * the data that should be associated with the newly created Vehicle. If the
-	 * Vehicle is created, an HTTP 201 (Created) status is returned.
-	 * 
-	 * URL:http://localhost:8080/vim/rest/vehicles 
-	 * 
-	 * Request Method: POST
-	 * Request Body:
-	 * {"vehicleId":891,"vehicleName":"Ecosport","vehicleType":"Car","vehicleYear":
-	 * 2019,"vehicleMake":"FORD","vehicleModel":"luxury","vehiclePrice":900000.00,
-	 * "vehicleSpeed":190,"vehicleRegisterDate":1545244200000,
-	 * "description":"nano from tata","features":"non-AC","registeredBy":"mettu"}
-	 * Headers:
-	 *  Content-type: application/json:charset=UTF-8 
-	 *  Accept: application/json 
-	 *  Http Status: 201 Created 
-	 *  JSON Response:
-	 * 		{"respCode":200,"respMessage":"New Vehicle Data created Successfully"}
-	 * 	Headers: 
-	 * Content-type: application/xml;charset=UTF-8 
-	 * Accept: application/xml
-	 * Request Body: 
-	 * <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	 * <vehicle> 
-	 * <description>Heavy load Carrier</description> <features>20
-	 * wheels</features> <registeredBy>balanandu</registeredBy>
-	 * <vehicleId>123</vehicleId> <vehicleMake>TATA</vehicleMake>
-	 * <vehicleModel>Eicher</vehicleModel> <vehicleName>Ashok Leyland</vehicleName>
-	 * <vehiclePrice>600000.00</vehiclePrice>
-	 * <vehicleRegisterDate>2018-12-20</vehicleRegisterDate>
-	 * <vehicleSpeed>180</vehicleSpeed> <vehicleType>Truck</vehicleType>
-	 * <vehicleYear>2018</vehicleYear> </vehicle> 
-	 * Http Status: 201 Created 
-	 * XML Response:
-	 * <?xml version="1.0" encoding="UTF-8" standalone="yes"?> 
-	 * <Response>
-	 * <respCode>200</respCode> <respMessage>New Vehicle Data created
-	 * Successfully</respMessage> 
-	 * </Response> 
-	 */
-
-	@POST
-	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	public Response saveVehicle(Vehicle vehicle) {
-		boolean status = vehicleInventoryService.createVehicle(vehicle);
-		if (status) {
-			return Response.ok().status(Response.Status.CREATED).entity(
-					new ApiResponse(Response.Status.OK.getStatusCode(), "New Vehicle Data created Successfully"))
-					.build();
-		} else {
-			return Response.notModified().entity(new ApiResponse(Response.Status.NOT_MODIFIED.getStatusCode(),
-					"New Vehicle Data Not Saved Successfully")).build();
-		}
-	}
-
-	/*
-	 * It updates an Exist Vehicle Data
-	 * 
-	 * URL:http://localhost:8080/vim/rest/vehicles/2 
-	 * PathParam: vehicleId(int type)
-	 * Request Method: PUT 
-	 * 
-	 * Request Body:
-	 * {"vehicleName":"Ashok Leyland eqwe","vehicleType":"Truck",
-	 * "vehicleYear":2018,"vehicleMake":"TATA","vehicleModel":"Eicher",
-	 * "vehiclePrice":21123.00,"vehicleSpeed":180,"vehicleRegisterDate":"2018-12-20"
-	 * ,"description":"Heavy load Carrier","features":"20 wheels"
-	 * ,"registeredBy":"madhu sdas"} 
-	 * Headers: 
-	 * Content-type: application/json:charset=UTF-8 
-	 * Accept: application/json 
-	 * Http Status: 201 Created 
-	 * Response:
-	 * {"respCode":200,"respMessage":"Exist Vehicle Data updated Successfully"}
-	 * 
-	 * Headers: 
-	 * Content-type: application/xml;charset=UTF-8 
-	 * Accept: application/xml
-	 * Request Body: 
-	 * <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	 * <vehicle> 
-	 * <description>Heavy load Carrier</description> 
-	 * <features>20 wheels</features> <registeredBy>madhu sdas</registeredBy>
-	 * <vehicleMake>TATA</vehicleMake>
-	 * <vehicleModel>Eicher</vehicleModel> <vehicleName>Ashok Leyland</vehicleName>
-	 * <vehiclePrice>21123.00</vehiclePrice>
-	 * <vehicleRegisterDate>2018-12-20</vehicleRegisterDate>
-	 * <vehicleSpeed>180</vehicleSpeed> <vehicleType>Truck</vehicleType>
-	 * <vehicleYear>2018</vehicleYear></vehicle> Http Status: 201 Created Response:
-	 * <?xml version="1.0" encoding="UTF-8" standalone="yes"?> <Response>
-	 * <respCode>200</respCode> <respMessage>Exist Vehicle Data updated
-	 * Successfully</respMessage>
-	 * </Response> 
-	 */
-	@Path("/{id}")
-	@PUT
-	@Consumes({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	public Response updateCity(Vehicle vehicle, @PathParam("id") int id) {
-		try {
-			validateVechicleId(id);
-		} catch (Exception e) {
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(
-					new InternalServerException(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), e.getMessage()))
-					.build();
-		}
-		boolean status = vehicleInventoryService.updateVehicle(vehicle, id);
-		if (status) {
-			return Response.ok().status(Response.Status.CREATED).entity(
-					new ApiResponse(Response.Status.OK.getStatusCode(), "Exist Vehicle Data updated Successfully"))
-					.build();
-		} else {
-			return Response.notModified().entity(new ApiResponse(Response.Status.NOT_MODIFIED.getStatusCode(),
-					"Exist Vehicle Data Not updated Successfully")).build();
-		}
-
-	}
 
 	/*
 	 * It validates vehicle id , on invalid data throws exception

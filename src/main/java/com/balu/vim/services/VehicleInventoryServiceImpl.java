@@ -1,7 +1,6 @@
 package com.balu.vim.services;
 
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
@@ -12,6 +11,7 @@ import org.jboss.resteasy.spi.BadRequestException;
 import com.balu.vim.dao.VehicleDao;
 import com.balu.vim.model.Vehicle;
 import com.balu.vim.resources.VehicleDescs;
+import com.balu.vim.utils.DataSourceUtil;
 
 //service Layer Logic to perform CRUD operation on Vehicle Resource
 public class VehicleInventoryServiceImpl implements VehicleInventoryService {
@@ -81,7 +81,7 @@ public class VehicleInventoryServiceImpl implements VehicleInventoryService {
 		}else if(vehicle.getDescription() == null || vehicle.getFeatures() == null) {
 			getVehicleFeatureAndDescription(vehicle);
 		}else if(vehicle.getVehicleRegisterDate() == null) {
-			vehicle.setVehicleRegisterDate(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").format(Calendar.getInstance().getTime()));
+			vehicle.setVehicleRegisterDate(DataSourceUtil.dateToString(Calendar.getInstance().getTime()));
 		}else if(vehicle.getVehiclePrice() == null) {
 			vehicle.setVehiclePrice(new BigDecimal("0.00"));
 		}else if(vehicle.getVehicleYear() == 0) {

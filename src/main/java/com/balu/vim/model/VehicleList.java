@@ -9,7 +9,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "VehicleList")
 public class VehicleList {
  
-    @XmlElement(name = "Vehicle")
+    //@XmlElement(name = "Vehicle")
     protected List<Vehicle> vehicleList;
  
     public List<Vehicle> getVehicleList() {
